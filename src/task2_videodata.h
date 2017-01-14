@@ -26,9 +26,9 @@ typedef signed int u32;
   
 
 // interface_status_t status;  
-char buf_task2[512] = {'\0'};  
-char buf0_task2[512] = {'\0'};  
-char carrier_path[512] = {'\0'};  
+ 
+  
+ 
 
 // ==========
 int FlagEth0Uped = 0;

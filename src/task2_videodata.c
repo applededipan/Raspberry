@@ -4,6 +4,8 @@
 void task2_status_network(char *hw_name,unsigned int *status)
 {
 	FILE *fp1_task2;
+	char buf_task2[512] = {'\0'}; 	
+	char carrier_path[512] = {'\0'}; 
 	
 	memset(buf_task2, 0, sizeof(buf_task2));   
 	snprintf(carrier_path, sizeof(carrier_path), "/sys/class/net/%s/carrier", hw_name);  
@@ -28,6 +30,7 @@ void task2_status_network(char *hw_name,unsigned int *status)
 void task2_videdata()    
 {
 	FILE *fp0_task2;
+	char buf0_task2[512] = {'\0'};	
 	
 	if ((fp0_task2 = fopen("/proc/net/dev", "r"))!=NULL) {   
 		memset(buf0_task2, 0, sizeof(buf0_task2)); 
