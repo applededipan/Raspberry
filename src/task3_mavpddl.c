@@ -15,7 +15,7 @@ unsigned int task3_Ping(const char *path)
 	static  FILE *fp3;	
 
 	fp3 = popen(path, "r");
-	fgets(&commandId,sizeof(&commandId), fp3);
+	fgets(&commandId, sizeof(&commandId), fp3);
 	pclose(fp3);
 
 	return atoi(&commandId);

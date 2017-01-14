@@ -22,8 +22,8 @@
   
 typedef signed int u32;  
 
-FILE *fp0_task2;  
-FILE *fp1_task2;  
+  
+  
 
 // interface_status_t status;  
 char buf_task2[512] = {'\0'};  
