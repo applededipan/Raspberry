@@ -1,0 +1,48 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+BUFFER_LENGTH	global.h	8;"	d
+BUFFER_LENGTH	task1_mavdata.h	26;"	d
+BUFLEN	task2_videodata.h	15;"	d
+GLOBAL_H	global.h	2;"	d
+INIT_H	init.h	2;"	d
+TASK1_MAVDATA_H	task1_mavdata.h	2;"	d
+TASK2_VIDEODATA_H	task2_videodata.h	2;"	d
+addr	task2_videodata.h	/^    struct sockaddr_nl addr;    $/;"	v	typeref:struct:sockaddr_nl
+attr	task2_videodata.h	/^    struct rtattr *attr;$/;"	v	typeref:struct:rtattr
+buf	task2_videodata.h	/^    char buf[BUFLEN] = {0};    $/;"	v
+fd1	init.h	/^ int fd1; \/\/fd for serial task1$/;"	v
+fd2	task2_videodata.h	/^    int fd2, retval,status;    $/;"	v
+flag	task2_videodata.h	/^	static flag=0;$/;"	v
+flag1	task2_videodata.h	/^	static flag1=0;$/;"	v
+fromlen	task1_mavdata.h	/^   static socklen_t fromlen;$/;"	v
+gcAddr	main.c	/^struct sockaddr_in gcAddr; $/;"	v	typeref:struct:sockaddr_in
+ifinfo	task2_videodata.h	/^    struct ifinfomsg *ifinfo;    $/;"	v	typeref:struct:ifinfomsg
+init	init.c	/^int init(char *ip,struct sockaddr_in *a, struct sockaddr_in *b)$/;"	f
+len2	task2_videodata.h	/^    int len2 = BUFLEN;    $/;"	v
+locAddr	main.c	/^struct sockaddr_in locAddr;$/;"	v	typeref:struct:sockaddr_in
+main	main.c	/^int main()$/;"	f
+nh	task2_videodata.h	/^    struct nlmsghdr *nh;    $/;"	v	typeref:struct:nlmsghdr
+recbuf	task1_mavdata.h	/^   static uint8_t recbuf[BUFFER_LENGTH];$/;"	v
+retval	task2_videodata.h	/^    int fd2, retval,status;    $/;"	v
+sendbuf	task1_mavdata.h	/^   static uint8_t sendbuf[BUFFER_LENGTH];$/;"	v
+sendmsg1	main.c	/^mavlink_message_t sendmsg1;$/;"	v
+sendstatus	main.c	/^mavlink_status_t sendstatus;$/;"	v
+serialClose	wiringSerial.c	/^void serialClose (const int fd)$/;"	f
+serialDataAvail	wiringSerial.c	/^int serialDataAvail (const int fd)$/;"	f
+serialFlush	wiringSerial.c	/^void serialFlush (const int fd)$/;"	f
+serialGetchar	wiringSerial.c	/^int serialGetchar (const int fd)$/;"	f
+serialOpen	wiringSerial.c	/^int serialOpen (const char *device, const int baud)$/;"	f
+serialPrintf	wiringSerial.c	/^void serialPrintf (const int fd, const char *message, ...)$/;"	f
+serialPutchar	wiringSerial.c	/^void serialPutchar (const int fd, const unsigned char c)$/;"	f
+serialPuts	wiringSerial.c	/^void serialPuts (const int fd, const char *s)$/;"	f
+status	task2_videodata.h	/^    int fd2, retval,status;    $/;"	v
+target_ip	main.c	/^char * target_ip="192.168.42.129";$/;"	v
+task1_MavData	task1_mavdata.c	/^void task1_MavData(mavlink_message_t mav_smesg, mavlink_status_t mav_sstat)$/;"	f
+task2_init	task2_videodata.c	/^void task2_init()$/;"	f
+task2_videdata	task2_videodata.c	/^int task2_videdata()    $/;"	f
+udpinit	task1_mavdata.c	/^int udpinit(char *target_addr,struct sockaddr_in *a, struct sockaddr_in *b)  \/\/a---gcAddr   b---locAddr$/;"	f
+udpsock	init.h	/^ int udpsock;$/;"	v

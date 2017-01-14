@@ -1,0 +1,11 @@
+raspi-code-v1.5.6
+---------------------------
+  串口1，波特率为115200；功能有：透传mavlink数据，检测usb0的热插，桥接eth1<->usb0 。usb0 热插检测程序（方法）改变为sock--ioctl方式,每隔一段时间主动查询，而不是之前的被动的触发。把ping pddl进程单独分离到进程3中，增加对master slave 的ping 功能。
+dynatic to check the usb0 and eth0 
+
+notes below added by apple:
+
+1 树莓派连接PC端地面站时：
+  a 地面站IP地址为192.168.42.129
+
+  b 地面站必须关闭防火墙
