@@ -31,6 +31,8 @@ void task2_videdata()
 {
 	FILE *fp0_task2;
 	char buf0_task2[512] = {'\0'};	
+	bool FlagEth0Uped = false;
+	bool FlagUsb0Uped = flase;
 	
 	if ((fp0_task2 = fopen("/proc/net/dev", "r"))!=NULL) {   
 		memset(buf0_task2, 0, sizeof(buf0_task2)); 
@@ -59,7 +61,6 @@ void task2_videdata()
 
 	fclose(fp0_task2); 
 
-	//=============
 	  
 	if (flag_eth0 == IFSTATUS_UP && flag_usb0 == IFSTATUS_UP) {
 		flag_network = ETH0_UP;
@@ -76,32 +77,30 @@ void task2_videdata()
 		printf("no link \n");
 	}
 
-	//====
 
 	if (flag_network == USB0_UP) {
-		if (FlagUsb0Uped == 0) {
+		if (FlagUsb0Uped == false) {
 			printf("usb0 is up \n");
 			system("br1down");
 			system("br0up");
-			FlagUsb0Uped = 1;
+			FlagUsb0Uped = true;
 		}
 		
 	} else {
-		FlagUsb0Uped = 0;
+		FlagUsb0Uped = false;
 	}
 
-	//============
 
 	if (flag_network == ETH0_UP) {
-		if (FlagEth0Uped == 0) {
+		if (FlagEth0Uped == false) {
 			printf("eth0 is up \n");
 			system("br0down");
 			system("br1up");
-			FlagEth0Uped=1;
+			FlagEth0Uped = true;
 		}
 
 	} else {
-		FlagEth0Uped = 0;
+		FlagEth0Uped = false;
 	} 
 }
   

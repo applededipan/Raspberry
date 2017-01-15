@@ -20,26 +20,13 @@
 #define IFSTATUS_UP 0
 #define IFSTATUS_DOWN 1
   
-typedef signed int u32;  
 
-  
-  
-
-// interface_status_t status;  
- 
-  
- 
 
 // ==========
-int FlagEth0Uped = 0;
-int FlagUsb0Uped = 0;
 
-/* for passing single values */  
-struct ethtool_value  
-{  
-	u32 cmd;  
-	u32 data;  
-};  
+
+
+ 
 
 unsigned int flag_eth0 = 0xcc;
 unsigned int flag_usb0 = 0xcc;
