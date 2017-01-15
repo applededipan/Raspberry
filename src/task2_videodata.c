@@ -32,7 +32,7 @@ void task2_videdata()
 	FILE *fp0_task2;
 	char buf0_task2[512] = {'\0'};	
 	bool FlagEth0Uped = false;
-	bool FlagUsb0Uped = flase;
+	bool FlagUsb0Uped = false;
 	
 	if ((fp0_task2 = fopen("/proc/net/dev", "r"))!=NULL) {   
 		memset(buf0_task2, 0, sizeof(buf0_task2)); 
@@ -47,7 +47,7 @@ void task2_videdata()
 			}
 
 			if (strstr(buf0_task2, "eth0") != NULL) {         
-				task2_status_network("eth0",&flag_eth0);
+				task2_status_network("eth0", &flag_eth0);
 				
 				if (flag_eth0 == IFSTATUS_UP) {
 					break;
