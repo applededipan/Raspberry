@@ -146,7 +146,7 @@ uint8_t creatUpdateFile(uint8_t *data, uint32_t offset, uint8_t size)
 	memcpy(buffer, (char*)data, size);
 	memset(data, 0, size);
 
-	if ((fp = fopen("/home/pi/Firmware/src/main_update", "wb+")) == NULL) {
+	if ((fp = fopen("/home/pi/Firmware/src/main_temp", "wb+")) == NULL) {
 	 
 		return 1; // failed
 		fclose(fp);
@@ -241,6 +241,7 @@ void ftpProcess(void)
 			mavlink_msg_file_transfer_protocol_pack(RASP_SYSTEM_ID, RASP_COMPON_ID, &msgFtp, myFtp.network, QGCONTROL_ID, 0, (uint8_t*)&myFtp.payload);
 			uint16_t lenMsg = mavlink_msg_to_send_buffer(msgFtpBuffer, &msgFtp);
 			sendto(udpsock, msgFtpBuffer, lenMsg, 0, (struct sockaddr*)&gcAddr, sizeof(struct sockaddr_in));
+			system("sudo mv -f /home/pi/Firmware/src/main_temp /home/pi/Firmware/src/main_update");
 			system("sudo reboot");
 			break;
 				
