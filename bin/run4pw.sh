@@ -14,7 +14,6 @@ fi
 
 
 if [ -f /usr/bin/sub-br0up.sh -a -f /usr/bin/br0up ]
-
 then 
     echo do not need copy
 else
@@ -23,11 +22,13 @@ fi
 
 # delete main_temp file
 if [ -f /home/pi/Firmware/src/main_temp ]
+then
 	sudo rm -f /home/pi/Firmware/src/main_temp
 fi
 
-# check if new firmware exist
+# check if new firmware exist and then rename
 if [ -f /home/pi/Firmware/src/main_update ]
+then
 	sudo mv -f /home/pi/Firmware/src/main_update /home/pi/Firmware/src/main
 fi
 
