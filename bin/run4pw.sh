@@ -24,16 +24,19 @@ fi
 if [ -f /home/pi/Firmware/src/main_temp ]
 then
 	sudo rm -f /home/pi/Firmware/src/main_temp
+	echo "apple: delete main_temp file"
 fi
 
 # check if new firmware exist and then rename
 if [ -f /home/pi/Firmware/src/main_update ]
 then
 	sudo mv -f /home/pi/Firmware/src/main_update /home/pi/Firmware/src/main
+	echo "apple: rename main_update file"
 fi
 
 sudo chmod 755 /home/pi/Firmware/src/main
 /home/pi/Firmware/src/main
+echo "apple: main running!"
 
 
 
