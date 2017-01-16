@@ -21,23 +21,29 @@ else
     sudo cp /home/pi/Firmware/shell/* /usr/bin/
 fi
 
-#/home/pi/Firmware/src/main
-if [ -f /home/pi/Firmware/src/main_update ]
-then
-    sudo chmod 755 /home/pi/Firmware/src/main_update
-    /home/pi/Firmware/src/main_update
-else
-    sudo chmod 755 /home/pi/Firmware/src/main
-    /home/pi/Firmware/src/main
+# delete main_temp file
+if [ -f /home/pi/Firmware/src/main_temp ]
+	sudo rm -f /home/pi/Firmware/src/main_temp
 fi
 
-#run=/home/pi/Firmware/src/main
+# check if new firmware exist
+if [ -f /home/pi/Firmware/src/main_update ]
+	sudo mv -f /home/pi/Firmware/src/main_update /home/pi/Firmware/src/main
+fi
 
-#if [ -x ${run} ]
+sudo chmod 755 /home/pi/Firmware/src/main
+/home/pi/Firmware/src/main
+
+
+
+# check if new firmware exist
+#if [ -f /home/pi/Firmware/src/main_update ]
 #then
-#	${run}
-#else 
-#	echo "can not run file"
-#     sudo chmod 755 ${run}
-#     ${run}
+#    sudo chmod 755 /home/pi/Firmware/src/main_update
+#    /home/pi/Firmware/src/main_update
+#else
+#    sudo chmod 755 /home/pi/Firmware/src/main
+#    /home/pi/Firmware/src/main
 #fi
+
+
