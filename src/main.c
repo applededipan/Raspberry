@@ -43,7 +43,7 @@ int main()
     pid_t pid;
     pid_t pid1;
 
-	if (init(target_ip, &gcAddr, &locAddr) != 0) {
+	if (init(target_ip, &gcAddr, &locAddr) == false) {
 
 		//TODO print some error info.
 		return 1;	   
