@@ -80,7 +80,7 @@ void task1_MavData(void)
 
 				if (msgUpdate.msgid == MAVLINK_MSG_ID_FILE_TRANSFER_PROTOCOL) {
 
-					if (handle_message_file_transfer_protocol(&msgUpdate) == 0) {
+					if (handle_message_file_transfer_protocol(&msgUpdate)) {
 						// message ok
 						ftpProcess();
 					}
@@ -105,18 +105,18 @@ void task1_MavData(void)
  * @MSGID: MAVLINK_MSG_ID_FILE_TRANSFER_PROTOCOL 110   
   
  * @payload  Variable length payload.
- * @return   1:failed   0:ok
+ * @return   
 *******************************************************************************/
-uint8_t handle_message_file_transfer_protocol(const mavlink_message_t *msg) 
+bool handle_message_file_transfer_protocol(const mavlink_message_t *msg) 
 {    
-	if (msg->sysid != QGCONTROL_ID) return 1;  //! message must from QGC 
+	if (msg->sysid != QGCONTROL_ID) return false;  //! message must from QGC 
 
 	mavlink_file_transfer_protocol_t data;
 	mavlink_msg_file_transfer_protocol_decode(msg, &data);  
 	Payload* payload = (Payload*)&data.payload[0];  
 				   
 	ftp.sysid = mavlink_msg_file_transfer_protocol_get_target_system(msg);
-	if(ftp.sysid != RASP_SYSTEM_ID) return 1; //! see if this message is for raspberry            
+	if(ftp.sysid != RASP_SYSTEM_ID) return false; //! see if this message is for raspberry            
 								
 	ftp.payload.hdr.seqNumber = payload->hdr.seqNumber;
 	ftp.payload.hdr.opcode    = payload->hdr.opcode;
@@ -124,7 +124,7 @@ uint8_t handle_message_file_transfer_protocol(const mavlink_message_t *msg)
 	ftp.payload.hdr.size      = payload->hdr.size;
 	memcpy(&ftp.payload.data, &payload->data, sizeof(ftp.payload.data));
 
-	return 0;                                                    
+	return true;                                                    
 }
 
 
