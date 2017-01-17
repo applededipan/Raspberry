@@ -19,8 +19,3 @@ bool init(char *ip, struct sockaddr_in *a, struct sockaddr_in *b)
     return true;
 
 }
-
-void creatPingTarget(void)
-{
-
-}

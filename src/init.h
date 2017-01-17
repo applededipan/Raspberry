@@ -30,6 +30,6 @@
 #include "wiringSerial.h"
 
 bool init(char *ip, struct sockaddr_in *a, struct sockaddr_in *b);
-void creatPingTarget(void);
+
  
 #endif
