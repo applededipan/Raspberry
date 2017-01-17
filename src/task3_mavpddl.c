@@ -3,24 +3,6 @@
 
 mavlink_system_t mavlink_system = {RASP_SYSTEM_ID, RASP_COMPON_ID};
 	
-const char path[3][38] = {
-"/home/pi/Firmware/shell/pingTarget.sh",
-"/home/pi/Firmware/shell/pingSlave.sh",
-"/home/pi/Firmware/shell/pingMaster.sh",
-};
-
-unsigned int task3_Ping(const char *path)
-{
-	static  char commandId;
-	static  FILE *fp3;	
-
-	fp3 = popen(path, "r");
-	fgets(&commandId, sizeof(&commandId), fp3);
-	pclose(fp3);
-
-	return atoi(&commandId);
-}
-
  
 void usart_Send_Buffer(const char *buf, uint16_t len)
 {
@@ -38,26 +20,26 @@ void usart_Send_Buffer(const char *buf, uint16_t len)
 void task3_MavPddl(void)
 {
 	static uint8_t linkStatus = 0;	
-
-	if (task3_Ping(path[0])) {
-
-		if (task3_Ping(path[1])) {
+	
+	if (system("ping -c 2 192.168.42.123")) {
+		
+		if (system("ping -c 2 192.168.42.2")) {
 			
-			if (task3_Ping(path[2])) {
-				linkStatus = 128;	// 0X80   linked with rasp
+			if (system("ping -c 2 192.168.42.3")) {
+				
+				linkStatus = 128;
 				
 			} else {
-				linkStatus = 144;	// 0X90   linked with master
+				linkStatus = 144;
 			}
-
+			
 		} else {
-			linkStatus = 176;		// 0XB0   linked with salve 
+			linkStatus = 176;
 		}
 		
 	} else {
-		linkStatus = 240;			// 0XF0   linked with camera 
+		linkStatus = 240;
 	}
-		
 	// send to SmartConsole	
 	mavlink_msg_debug_send(MAVLINK_COMM_0, 0, linkStatus, 0);
 
