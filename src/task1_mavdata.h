@@ -84,14 +84,12 @@ typedef struct
 
 
 Ftp ftp;
-bool firmwareUpdate;
-
 
 
 void ftpProcess(void);
 void task1_MavData(void);
 bool creatUpdateFile(uint8_t* data, uint32_t offset, uint8_t size);
-int udpinit(char *target_addr,struct sockaddr_in *a, struct sockaddr_in *b);
+int  udpinit(char *target_addr,struct sockaddr_in *a, struct sockaddr_in *b);
 bool handle_message_file_transfer_protocol(const mavlink_message_t *msg); 
 
 

@@ -142,29 +142,28 @@ bool creatUpdateFile(uint8_t *data, uint32_t offset, uint8_t size)
 {
 	FILE *fp;
 	char buffer[256]; // actually only use first 239 bytes
-	uint16_t count;
 	memcpy(buffer, (char*)data, size);
 	memset(data, 0, size);
 
-	if ((fp = fopen("/home/pi/Firmware/src/main_temp", "wb+")) == NULL) {
 		
-		fclose(fp);	 
+	if ((fp = fopen("/home/pi/Firmware/src/main_temp", "ab")) == NULL) {
+		
+		printf("apple: open file faild!\n"); 
 		return false; // failed
-
 	}
-
-	if (fseek(fp, offset, SEEK_END)) {
 		
-		fclose(fp);	 
+	if (fseek(fp, offset, SEEK_SET)) {
+		
+		printf("apple: seek file failed!\n");	 
 		return false;
 	}
 
-	if (fwrite(buffer, size, count, fp) != count) {
+	if (fwrite(buffer, size, 1, fp) != 1) {
 		
-		fclose(fp);
+		printf("apple: write file failed!\n");
 		return false;
 	}
-
+	
 	fclose(fp);
 
 	return true;
@@ -206,30 +205,22 @@ void ftpProcess(void)
 			break;
 
 		case kCmdWriteFile:
-			if (firmwareUpdate != true) {
-
-				firmwareUpdate = true; // start firmware update!
+			if (creatUpdateFile((uint8_t*)&ftp.payload.data, ftp.payload.hdr.offset, ftp.payload.hdr.size)) {
+			   
+				ack = true;  // write file succeed!
 
 			} else {
 
-				if (creatUpdateFile((uint8_t*)&ftp.payload.data, ftp.payload.hdr.offset, ftp.payload.hdr.size)) {
-				   
-					ack = true;  // write file succeed!
-
-				} else {
-
-					ack = false; // write file failed!
-				}
+				ack = false; // write file failed!
 			}
 			break;
-
 			
 		case kCmdResetSessions:
 			break;
-
 			
 		case kCmdSearchVersion:
 			strcpy((char*)myFtp.payload.data, RASP_VERSION);
+			ack = true;
 			break;
 		
 		case kCmdRemoveFile:
@@ -242,8 +233,7 @@ void ftpProcess(void)
 			system("sudo mv -f /home/pi/Firmware/src/main_temp /home/pi/Firmware/src/main_update");
 			system("sudo reboot");
 			break;
-				
-			
+							
 		default:
 			break;
 
