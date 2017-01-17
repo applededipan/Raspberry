@@ -136,9 +136,9 @@ bool handle_message_file_transfer_protocol(const mavlink_message_t *msg)
  * @brief *data the addr of received bin data from mavlink
  * @brief size  normal is 239
 
- * @return 0:ok  others:failed
+ * @return 
 ******************************************************************************/
-uint8_t creatUpdateFile(uint8_t *data, uint32_t offset, uint8_t size)
+bool creatUpdateFile(uint8_t *data, uint32_t offset, uint8_t size)
 {
 	FILE *fp;
 	char buffer[256]; // actually only use first 239 bytes
@@ -148,28 +148,28 @@ uint8_t creatUpdateFile(uint8_t *data, uint32_t offset, uint8_t size)
 
 	if ((fp = fopen("/home/pi/Firmware/src/main_temp", "wb+")) == NULL) {
 	 
-		return 1; // failed
+		return false; // failed
 		fclose(fp);
 
 	}
 
 	if (fseek(fp, offset, SEEK_END)) {
 	 
-		return 2;
+		return false;
 		fclose(fp);
 
 	}
 
 	if (fwrite(buffer, size, count, fp) != count) {
 
-		return 3;
+		return false;
 		fclose(fp);
 
 	}
 
 	fclose(fp);
 
-	return 0;
+	return true;
 
 }
 
@@ -188,7 +188,7 @@ void ftpProcess(void)
 	myFtp.network = 0;
 	myFtp.sysid   = RASP_SYSTEM_ID;
 	myFtp.cmpid   = RASP_COMPON_ID;
-	uint8_t ack   = 1;
+	bool ack      = true;
 
 	myFtp.payload.hdr.size    = sizeof(uint32_t);
 	myFtp.payload.hdr.session = 0;
@@ -208,19 +208,19 @@ void ftpProcess(void)
 			break;
 
 		case kCmdWriteFile:
-			if (firmwareUpdate != 1) {
+			if (firmwareUpdate != true) {
 
-				firmwareUpdate = 1; // start firmware update!
+				firmwareUpdate = true; // start firmware update!
 
 			} else {
 
 				if (creatUpdateFile((uint8_t*)&ftp.payload.data, ftp.payload.hdr.offset, ftp.payload.hdr.size)) {
 				   
-					ack = 0; // write file failed!
+					ack = true;  // write file succeed!
 
 				} else {
 
-					ack = 1; // write file succeed!
+					ack = false; // write file failed!
 				}
 			}
 			break;
