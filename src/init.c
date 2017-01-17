@@ -15,7 +15,7 @@ bool init(char *ip, struct sockaddr_in *a, struct sockaddr_in *b)
     } 
 
     //someelse will add following ...
-    creatPingTarget();
+
     return true;
 
 }
