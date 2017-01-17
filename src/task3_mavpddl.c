@@ -21,11 +21,11 @@ void task3_MavPddl(void)
 {
 	static uint8_t linkStatus = 0;	
 	
-	if (system("ping -c 2 192.168.42.123")) {
+	if (system("ping -c 2 192.168.42.123")) {			// camera ip addr
 		
-		if (system("ping -c 2 192.168.42.2")) {
+		if (system("ping -c 2 192.168.42.2")) {			// slave ip addr	
 			
-			if (system("ping -c 2 192.168.42.3")) {
+			if (system("ping -c 2 192.168.42.3")) {		// master ip addr
 				
 				linkStatus = 128;
 				
@@ -40,9 +40,9 @@ void task3_MavPddl(void)
 	} else {
 		linkStatus = 240;
 	}
+	
 	// send to SmartConsole	
 	mavlink_msg_debug_send(MAVLINK_COMM_0, 0, linkStatus, 0);
-
 
 	// send linkStatus by udp to QGC
 	mavlink_message_t debugMsg;

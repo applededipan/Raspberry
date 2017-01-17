@@ -147,24 +147,22 @@ bool creatUpdateFile(uint8_t *data, uint32_t offset, uint8_t size)
 	memset(data, 0, size);
 
 	if ((fp = fopen("/home/pi/Firmware/src/main_temp", "wb+")) == NULL) {
-	 
+		
+		fclose(fp);	 
 		return false; // failed
-		fclose(fp);
 
 	}
 
 	if (fseek(fp, offset, SEEK_END)) {
-	 
+		
+		fclose(fp);	 
 		return false;
-		fclose(fp);
-
 	}
 
 	if (fwrite(buffer, size, count, fp) != count) {
-
-		return false;
+		
 		fclose(fp);
-
+		return false;
 	}
 
 	fclose(fp);
