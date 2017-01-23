@@ -17,15 +17,63 @@ void usart_Send_Buffer(const char *buf, uint16_t len)
 }
 
 
+bool systemPing(char *ip)
+{
+    bool state;
+	FILE *fp = NULL;
+	char cmd[1024];
+
+    if ((fp = fopen("ping.txt", "wt+")) == NULL) {
+        printf("apple: cerat ping.txt file failed \n");
+        return false;
+    }
+
+    if (sprintf(cmd, "ping -c 1 %s > ping.txt", ip) == -1) {
+        printf("apple: sprintf failed \n");
+        return false;
+    }
+    
+    system(cmd);
+
+    fp = fopen("ping.txt", "r");
+    
+    if (fp == NULL) {
+        printf("apple: fopen ping.txt file failed \n");
+        return false;
+
+    } else {
+        uint8_t i;
+        for(i = 0; i < 2; i++) {
+            fgets(cmd, sizeof(cmd), fp);
+        }
+                
+        char *p;
+        if ((p = strstr(cmd, "ttl")) == NULL) {
+            printf("apple: ping %s failed \n", ip);
+            state = false;
+        } else {
+
+            state = true;
+        }
+        fclose(fp);
+    }
+    
+    system("rm -f ping.txt");
+    
+    return state;
+    
+}
+
+
 void task3_MavPddl(void)
 {
-	static uint8_t linkStatus = 0;	
+	static uint8_t linkStatus = 128;	
 	
-	if (system("ping -c 2 192.168.42.123")) {			// camera ip addr
+	if (systemPing("192.168.42.123")) {				// camera ip addr
 		
-		if (system("ping -c 2 192.168.42.2")) {			// slave ip addr	
+		if (systemPing("192.168.42.2")) {			// slave ip addr	
 			
-			if (system("ping -c 2 192.168.42.3")) {		// master ip addr
+			if (systemPing("192.168.42.3")) {		// master ip addr
 				
 				linkStatus = 128;
 				
