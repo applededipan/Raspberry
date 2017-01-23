@@ -69,11 +69,11 @@ void task3_MavPddl(void)
 {
 	static uint8_t linkStatus = 128;	
 	
-	if (systemPing("192.168.42.123")) {				// camera ip addr
+	if (systemPing("192.168.42.123") == false) {				// camera ip addr
 		
-		if (systemPing("192.168.42.2")) {			// slave ip addr	
+		if (systemPing("192.168.42.2") == false) {			// slave ip addr	
 			
-			if (systemPing("192.168.42.3")) {		// master ip addr
+			if (systemPing("192.168.42.3") == false) {		// master ip addr
 				
 				linkStatus = 128;
 				
