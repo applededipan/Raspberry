@@ -17,6 +17,44 @@ void usart_Send_Buffer(const char *buf, uint16_t len)
 }
 
 
+bool sysPing(const char *ip)
+{
+    bool state;
+    FILE *fp = NULL;
+    char buf[1024];
+
+    sprintf(buf, "ping -c 1 %s > /dev/null; echo $?", ip);
+
+    if ((fp = popen(buf, "r")) == NULL) {
+
+        printf("apple: popen failed! \n");
+        state = false;
+
+    } else {
+        
+		char cmd;
+        fgets(&cmd, sizeof(&cmd), fp);
+
+        if ((atoi(&cmd)) == 0) {
+            
+            printf("ping %s: ok \n", ip);
+            state = true;
+
+        } else {
+            printf("ping %s: failed \n", ip);
+            state = false;
+
+        }
+
+    }
+    
+    pclose(fp);
+
+    return state;
+}
+
+
+
 bool systemPing(char *ip)
 {
     bool state;
