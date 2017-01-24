@@ -58,17 +58,15 @@ int main()
 	//TODO fork maybe 	
 	if ((pid = fork()) < 0) { // 创建进程
 		perror("fork");  
-		exit(EXIT_FAILURE);	  
-	}
-
-	if (pid == 0) { // 创建子进程成功
+		exit(EXIT_FAILURE);
+		
+	} else if (pid == 0) { // 创建子进程成功
 
 		if ((pid1 = fork()) < 0) { // 创建进程
 			perror("fork");  
 			exit(EXIT_FAILURE);   
-		}
-			  
-		if (pid1 == 0) { //创建子进程成功
+			
+		} else if (pid1 == 0) { //创建子进程成功
 			printf("apple:task 2 will be running \n");
 			system("br0up");
 			
