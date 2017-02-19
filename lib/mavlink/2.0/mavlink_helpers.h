@@ -329,7 +329,8 @@ MAVLINK_HELPER void _mav_finalize_message_chan_send(mavlink_channel_t chan, uint
 	checksum = crc_calculate((const uint8_t*)&buf[1], header_len);
 #ifdef USE_SHIFT_ALG
 	char shift[255] = {0};
-	for(uint8_t i = 0; i < length; i++) shift[i]=((packet[i]<<4)&0xF0)|((packet[i]>>4)&0x0F); 
+	uint8_t i;
+	for(i = 0; i < length; i++) shift[i]=((packet[i]<<4)&0xF0)|((packet[i]>>4)&0x0F); 
 	crc_accumulate_buffer(&checksum, shift, length);
 #else	
 	crc_accumulate_buffer(&checksum, packet, length);
