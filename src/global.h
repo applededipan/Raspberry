@@ -9,6 +9,8 @@
 #define RASP_VERSION   "V2.0.2"
 #define BUFFER_LENGTH 1024
 
+#define USE_SHIFT_ALG
+
 #define MAVLINK_USE_CONVENIENCE_FUNCTIONS
 
 #include "../lib/mavlink/2.0/mavlink_types.h"

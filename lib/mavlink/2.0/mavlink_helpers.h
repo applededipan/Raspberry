@@ -10,8 +10,6 @@
 #define MAVLINK_HELPER
 #endif
 
-#define USE_SHIFT_ALG
-
 #include "mavlink_sha256.h"
 
 /*
@@ -243,6 +241,13 @@ MAVLINK_HELPER uint16_t mavlink_finalize_message_chan(mavlink_message_t* msg, ui
 	}
 	
 	msg->checksum = crc_calculate(&buf[1], header_len-1);
+	
+#ifdef USE_SHIFT_ALG
+	char *shift = (char *)&msg->payload64[0];
+	uint16_t i;
+	for(i = 0; i < length; i++) shift[i] = ((shift[i]<<4)&0xF0)|((shift[i]>>4)&0x0F); 
+#endif	
+
 	crc_accumulate_buffer(&msg->checksum, _MAV_PAYLOAD(msg), msg->len);
 	crc_accumulate(crc_extra, &msg->checksum);
 	mavlink_ck_a(msg) = (uint8_t)(msg->checksum & 0xFF);
@@ -329,8 +334,8 @@ MAVLINK_HELPER void _mav_finalize_message_chan_send(mavlink_channel_t chan, uint
 	checksum = crc_calculate((const uint8_t*)&buf[1], header_len);
 #ifdef USE_SHIFT_ALG
 	char shift[255] = {0};
-	uint8_t i;
-	for(i = 0; i < length; i++) shift[i]=((packet[i]<<4)&0xF0)|((packet[i]>>4)&0x0F); 
+	uint16_t i;
+	for(i = 0; i < length; i++) shift[i] = ((packet[i]<<4)&0xF0)|((packet[i]>>4)&0x0F); 
 	crc_accumulate_buffer(&checksum, shift, length);
 #else	
 	crc_accumulate_buffer(&checksum, packet, length);
@@ -446,7 +451,7 @@ MAVLINK_HELPER uint16_t mavlink_msg_to_send_buffer(uint8_t *buf, const mavlink_m
 		buf[6] = msg->compid;
 		buf[7] = msg->msgid & 0xFF;
 		buf[8] = (msg->msgid >> 8) & 0xFF;
-		buf[9] = (msg->msgid >> 16) & 0xFF;
+		buf[9] = (msg->msgid >> 16) & 0xFF;		
 		memcpy(&buf[10], _MAV_PAYLOAD(msg), length);
 		ck = buf + header_len + 1 + (uint16_t)length;
 		signature_len = (msg->incompat_flags & MAVLINK_IFLAG_SIGNED)?MAVLINK_SIGNATURE_BLOCK_LEN:0;
