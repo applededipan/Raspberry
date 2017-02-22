@@ -77,16 +77,14 @@ void task1_MavData(void)
 			serialPutchar(fd1, (unsigned char)recvBuffer[i]);
 
 			if (mavlink_parse_char(MAVLINK_COMM_1, (unsigned char)recvBuffer[i], &msgUpdate, &statusUpdate)) {
-				#ifdef USE_SHIFT_ALG
-					char* m = (char *)&msgUpdate.payload64[0];
-					uint16_t j;
-					for(j = 0; j < msgUpdate.len; j++) {
-						m[j] = ((m[j]<<4)&0xF0)|((m[j]>>4)&0x0F); 
-					}
-				#endif
-				
 				if (msgUpdate.msgid == MAVLINK_MSG_ID_FILE_TRANSFER_PROTOCOL) {
-
+					#ifdef USE_SHIFT_ALG
+						char* m = (char *)&msgUpdate.payload64[0];
+						uint16_t j;
+						for(j = 0; j < msgUpdate.len; j++) {
+							m[j] = ((m[j]<<4)&0xF0)|((m[j]>>4)&0x0F); 
+						}
+					#endif
 					if (handle_message_file_transfer_protocol(&msgUpdate)) {
 						// message ok
 						ftpProcess();
