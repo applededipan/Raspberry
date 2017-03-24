@@ -241,12 +241,6 @@ MAVLINK_HELPER uint16_t mavlink_finalize_message_chan(mavlink_message_t* msg, ui
 	}
 	
 	msg->checksum = crc_calculate(&buf[1], header_len-1);
-	
-#ifdef USE_SHIFT_ALG
-	char *shift = (char *)&msg->payload64[0];
-	uint16_t i;
-	for(i = 0; i < length; i++) shift[i] = ((shift[i]<<4)&0xF0)|((shift[i]>>4)&0x0F); 
-#endif	
 
 	crc_accumulate_buffer(&msg->checksum, _MAV_PAYLOAD(msg), msg->len);
 	crc_accumulate(crc_extra, &msg->checksum);
@@ -332,14 +326,7 @@ MAVLINK_HELPER void _mav_finalize_message_chan_send(mavlink_channel_t chan, uint
         }
 	status->current_tx_seq++;
 	checksum = crc_calculate((const uint8_t*)&buf[1], header_len);
-#ifdef USE_SHIFT_ALG
-	char shift[255] = {0};
-	uint16_t i;
-	for(i = 0; i < length; i++) shift[i] = ((packet[i]<<4)&0xF0)|((packet[i]>>4)&0x0F); 
-	crc_accumulate_buffer(&checksum, shift, length);
-#else	
 	crc_accumulate_buffer(&checksum, packet, length);
-#endif	
 	crc_accumulate(crc_extra, &checksum);
 	ck[0] = (uint8_t)(checksum & 0xFF);
 	ck[1] = (uint8_t)(checksum >> 8);
@@ -352,11 +339,7 @@ MAVLINK_HELPER void _mav_finalize_message_chan_send(mavlink_channel_t chan, uint
 	
 	MAVLINK_START_UART_SEND(chan, header_len + 3 + (uint16_t)length + (uint16_t)signature_len);
 	_mavlink_send_uart(chan, (const char *)buf, header_len+1);
-#ifdef USE_SHIFT_ALG
-	_mavlink_send_uart(chan, shift, length);
-#else
 	_mavlink_send_uart(chan, packet, length);
-#endif	
 	_mavlink_send_uart(chan, (const char *)ck, 2);
 	if (signature_len != 0) {
 		_mavlink_send_uart(chan, (const char *)signature, signature_len);
@@ -426,7 +409,7 @@ MAVLINK_HELPER uint16_t mavlink_msg_to_send_buffer(uint8_t *buf, const mavlink_m
 {
 	uint8_t signature_len, header_len;
 	uint8_t *ck;
-        uint8_t length = msg->len;
+	uint8_t length = msg->len;
         
 	if (msg->magic == MAVLINK_STX_MAVLINK1) {
 		signature_len = 0;

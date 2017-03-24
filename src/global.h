@@ -6,7 +6,7 @@
 #define QGCONTROL_ID  255
 #define RASP_SYSTEM_ID 250
 #define RASP_COMPON_ID 100
-#define RASP_VERSION   "V2.0.2"
+#define RASP_VERSION   "V2.0.3"
 #define BUFFER_LENGTH 1024
 
 #define USE_SHIFT_ALG

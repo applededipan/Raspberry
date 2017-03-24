@@ -3,14 +3,23 @@
 
 mavlink_system_t mavlink_system = {RASP_SYSTEM_ID, RASP_COMPON_ID};
 	
- 
+char shift[256] = {0};
 void usart_Send_Buffer(const char *buf, uint16_t len)
 {
 	int i;
+	#ifdef USE_SHIFT_ALG
+		for (i = 0; i < len; i++) {
+			shift[i] = ((buf[i]<<4)&0xF0)|((buf[i]>>4)&0x0F);
+		}
+	#endif
 
 	if (len > 0) {
-		for ( i = 0; i < len; ++i) {
+		for (i = 0; i < len; ++i) {
+		#ifdef USE_SHIFT_ALG
+			serialPutchar(fd1, (unsigned char)shift[i]);
+		#else
 			serialPutchar(fd1, (unsigned char)buf[i]);
+		#endif
 		}
 		   
 	}	
@@ -135,6 +144,12 @@ void task3_MavPddl(void)
 	uint8_t debugMsgBuffer[BUFFER_LENGTH];
 	mavlink_msg_debug_pack(RASP_SYSTEM_ID, RASP_COMPON_ID, &debugMsg, 0, linkStatus, 0);     
 	uint16_t lenMsg = mavlink_msg_to_send_buffer(debugMsgBuffer, &debugMsg);
+	#ifdef USE_SHIFT_ALG
+		uint16_t i;
+		for (i = 0; i < sizeof(debugMsgBuffer); i++) {
+			debugMsgBuffer[i] = ((debugMsgBuffer[i]<<4)&0xF0)|((debugMsgBuffer[i]>>4)&0x0F);
+		}
+	#endif
 	sendto(udpsock, debugMsgBuffer, lenMsg, 0, (struct sockaddr*)&gcAddr, sizeof(struct sockaddr_in));
 		
 }

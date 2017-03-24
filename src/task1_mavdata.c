@@ -61,9 +61,17 @@ void task1_MavData(void)
 	// data from SmartConsole to QGC
 	while (serialDataAvail(fd1)) {
 		uint8_t byte = serialGetchar(fd1);
-
+		#ifdef USE_SHIFT_ALG
+			byte = ((byte<<4)&0xF0)|((byte>>4)&0x0F);
+		#endif
 		if (mavlink_parse_char(MAVLINK_COMM_0, byte, &msgFromSmartConsole, &statusFromSmartConsole)) {			
-		   uint16_t len = mavlink_msg_to_send_buffer(sendBuffer, &msgFromSmartConsole);
+			uint16_t len = mavlink_msg_to_send_buffer(sendBuffer, &msgFromSmartConsole);
+			#ifdef USE_SHIFT_ALG
+				uint16_t i;
+				for(i = 0; i < sizeof(sendBuffer); i++) {
+					sendBuffer[i] = ((sendBuffer[i]<<4)&0xF0)|((sendBuffer[i]>>4)&0x0F);
+				}
+			#endif
 		   sendto(udpsock, sendBuffer, len, 0, (struct sockaddr*)&gcAddr, sizeof(struct sockaddr_in));
 		}
 	}
@@ -75,16 +83,11 @@ void task1_MavData(void)
 
 		for (i = 0; i < recsize; ++i) {
 			serialPutchar(fd1, (unsigned char)recvBuffer[i]);
-
+			#ifdef USE_SHIFT_ALG
+				recvBuffer[i] = ((recvBuffer[i]<<4)&0xF0)|((recvBuffer[i]>>4)&0x0F);
+			#endif
 			if (mavlink_parse_char(MAVLINK_COMM_1, (unsigned char)recvBuffer[i], &msgUpdate, &statusUpdate)) {
 				if (msgUpdate.msgid == MAVLINK_MSG_ID_FILE_TRANSFER_PROTOCOL) {
-					#ifdef USE_SHIFT_ALG
-						char* m = (char *)&msgUpdate.payload64[0];
-						uint16_t j;
-						for(j = 0; j < msgUpdate.len; j++) {
-							m[j] = ((m[j]<<4)&0xF0)|((m[j]>>4)&0x0F); 
-						}
-					#endif
 					if (handle_message_file_transfer_protocol(&msgUpdate)) {
 						// message ok
 						ftpProcess();
@@ -234,6 +237,12 @@ void ftpProcess(void)
 		case kCmdReboot:
 			mavlink_msg_file_transfer_protocol_pack(RASP_SYSTEM_ID, RASP_COMPON_ID, &msgFtp, myFtp.network, QGCONTROL_ID, 0, (uint8_t*)&myFtp.payload);
 			uint16_t lenMsg = mavlink_msg_to_send_buffer(msgFtpBuffer, &msgFtp);
+			#ifdef USE_SHIFT_ALG
+				uint16_t i;
+				for (i = 0; i < sizeof(msgFtpBuffer); i++) {
+					msgFtpBuffer[i] = ((msgFtpBuffer[i]<<4)&0xF0)|((msgFtpBuffer[i]>>4)&0x0F);
+				}
+			#endif
 			sendto(udpsock, msgFtpBuffer, lenMsg, 0, (struct sockaddr*)&gcAddr, sizeof(struct sockaddr_in));
 			system("sudo mv -f /home/pi/Firmware/src/main_temp /home/pi/Firmware/src/main_update");
 			system("sudo reboot");
@@ -248,6 +257,12 @@ void ftpProcess(void)
 	if (ack) {
 		mavlink_msg_file_transfer_protocol_pack(RASP_SYSTEM_ID, RASP_COMPON_ID, &msgFtp, myFtp.network, QGCONTROL_ID, 0, (uint8_t*)&myFtp.payload);
 		uint16_t len = mavlink_msg_to_send_buffer(msgFtpBuffer, &msgFtp);
+		#ifdef USE_SHIFT_ALG
+			uint16_t i;
+			for (i = 0; i < sizeof(msgFtpBuffer); i++) {
+				msgFtpBuffer[i] = ((msgFtpBuffer[i]<<4)&0xF0)|((msgFtpBuffer[i]>>4)&0x0F);
+			}
+		#endif
 		sendto(udpsock, msgFtpBuffer, len, 0, (struct sockaddr*)&gcAddr, sizeof(struct sockaddr_in));
 	}
 
